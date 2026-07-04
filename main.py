@@ -22,7 +22,6 @@ def main():
 
     # creating array rooll_numbers
     roll_numbers = np.arange(101, 111)
-    print(f"Roll Numbers: {roll_numbers}")
 
     # Creating roll numbers array
     names = np.array([
@@ -37,7 +36,6 @@ def main():
         "Neha",
         "Riya"
     ])
-    print(f"Student Names: {names}")
 
     # Subject order:
     # Maths, Physics, Chemistry, English, Computer
@@ -53,8 +51,73 @@ def main():
         [64, 67, 65, 70, 68],  # Neha
         [93, 90, 94, 92, 95]   # Riya
     ])
-    print(marks)
+
+    display_student_data(roll_numbers, names, marks)
     display_dataset_info(marks)
+    explore_dataset(names, marks)    
+
+def display_student_data(
+        roll_numbers: np.ndarray,
+        names: np.ndarray,
+        marks: np.ndarray
+        ) -> None:
+    """
+    Display the complete student dataset.
+
+    Parameters:
+        roll_numbers (numpy.ndarray):
+            A 1D array containing the roll numbers of all students.
+
+        names (numpy.ndarray):
+            A 1D array containing the names of all students.
+
+        marks (numpy.ndarray):
+            A 2D array containing the marks of all students.
+
+    Displays:
+        - Roll numbers
+        - Student names
+        - Marks matrix
+    """
+    
+    print("========== STUDENT DATA ==========")
+    print(f"Roll Numbers:\n{roll_numbers}\n")
+    print(f"Student Names:\n{names}\n")
+    print(f"Marks:\n{marks}")
+
+def explore_dataset(
+        names: np.ndarray,
+        marks: np.ndarray
+        ) -> None:
+    """
+    Explore the student dataset by displaying basic information.
+
+    Parameters:
+        names (numpy.ndarray):
+            A 1D array containing the names of all students.
+
+        marks (numpy.ndarray):
+            A 2D array containing the marks of all students.
+
+    Displays:
+        - Total number of students
+        - Total number of subjects
+        - First student's name and marks
+        - Last student's name and marks
+    """
+    
+    print("========== DATASET OVERVIEW ==========\n")
+    print(f"Total Students: {names.size}")
+    print(f"Total Subjects: {marks.shape[1]}\n")
+
+    print("First Student:")
+    print(f"Name: {names[0]}")
+    print(f"Marks: {marks[0]}\n")
+
+    print("Last Studnet:")
+    print(f"Name: {names[-1]}")
+    print(f"Marks: {marks[-1]}")
+    
 
 def display_dataset_info(marks: np.ndarray) -> None:
     """
