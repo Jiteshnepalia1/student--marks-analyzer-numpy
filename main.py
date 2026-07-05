@@ -11,6 +11,7 @@ student performance using statistical operations.
 
 import numpy as np
 
+
 def main():
     """
     Main entry point of the Student Marks Analyzer project.
@@ -114,7 +115,7 @@ def explore_dataset(
     print(f"Name: {names[0]}")
     print(f"Marks: {marks[0]}\n")
 
-    print("Last Studnet:")
+    print("Last Student:")
     print(f"Name: {names[-1]}")
     print(f"Marks: {marks[-1]}")
     
