@@ -21,7 +21,7 @@ def main():
     and basic information about the marks array.
     """
 
-    # creating array rooll_numbers
+    # Create an array of student roll numbers.
     roll_numbers = np.arange(101, 111)
 
     # Creating roll numbers array
@@ -55,7 +55,8 @@ def main():
 
     display_student_data(roll_numbers, names, marks)
     display_dataset_info(marks)
-    explore_dataset(names, marks)    
+    explore_dataset(names, marks)
+    show_student_marks(names, marks, "jitesh".capitalize())    
 
 def display_student_data(
         roll_numbers: np.ndarray,
@@ -139,6 +140,45 @@ def display_dataset_info(marks: np.ndarray) -> None:
     print(f"Dimension of marks: {marks.ndim}D")
     print(f"DataType of marks: {marks.dtype}")
     print(f"Size of marks: {marks.size}")
+
+def show_student_marks(
+        names: np.ndarray,
+        marks: np.ndarray,
+        name_of_student: str
+) -> None:
+    """
+    Display the marks of a student by searching for their name.
+
+    Parameters:
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+        name_of_student (str):
+            The name of the student whose marks are to be displayed.
+
+    Displays:
+        - Student name
+        - Marks obtained in all subjects
+
+    If the student name does not exist in the dataset, an error message is displayed.
+    """
+     
+    # Check whether the student exists in the dataset.
+    if name_of_student in names:
+
+        # Find the index of names and marks
+        index = np.where(names == name_of_student)[0][0]
+
+        print("========== STUDENT MARKS ==========\n")
+        print(f"Student : {names[index]}\n")
+        print(f"Marks:\n{marks[index]}")
+
+    else:
+        print("\nInvalid student.")
+        
 
 if __name__ == "__main__":
     main()
