@@ -73,6 +73,8 @@ def main():
 
     show_student_subject_mark(names, SUBJECTS, marks, "Sakshi".capitalize(), "chemistry".capitalize())
 
+    show_students_range(names, marks, "jitesh".capitalize(), "Sakshi".capitalize())
+
 
 def display_student_data(
         roll_numbers: np.ndarray,
@@ -152,10 +154,12 @@ def display_dataset_info(marks: np.ndarray) -> None:
         - Total number of elements
     """
     # printing marks shape, dimension, datatype, size(number of items)
-    print(f"Shape of marks: {marks.shape}")
+    "\n========== DATASET INFORMATION ==========\n"
+
+    print(f"Shape of marks    : {marks.shape}")
     print(f"Dimension of marks: {marks.ndim}D")
-    print(f"DataType of marks: {marks.dtype}")
-    print(f"Size of marks: {marks.size}")
+    print(f"DataType of marks : {marks.dtype}")
+    print(f"Size of marks     : {marks.size}")
 
 def show_student_marks(
         names: np.ndarray,
@@ -293,6 +297,64 @@ def show_student_subject_mark(
     print(f"Subject : {subjects[subject_index]}")
     print(f"Marks   : {marks[student_index, subject_index]}")
 
+def show_students_range(
+        names: np.ndarray,
+        marks: np.ndarray,
+        start_student_name: str,
+        end_student_name: str
+) -> None:
+    """
+    Display the marks of a range of students.
+
+    Parameters:
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+        start_student_name (str):
+            The name of the first student in the range.
+
+        end_student_name (str):
+            The name of the last student in the range.
+
+    Displays:
+        - Student names within the specified range
+        - Marks obtained by each student in all subjects
+
+    If either student does not exist in the dataset or the start student
+    comes after the end student, an appropriate error message is displayed.
+    """
+    
+    # Check whether the student exists.
+    if start_student_name not in names:
+        print("Start student not found.")
+        return
+    
+    # Check whether the student exists.
+    if end_student_name not in names:
+        print("End student not found.")
+        return
+    
+    # Find the indices
+    start_student_index = np.where(names == start_student_name)[0][0]
+    end_student_index = np.where(names == end_student_name)[0][0]
+
+    # Validate the order
+    if start_student_index > end_student_index:
+        print("The start student must come before the end student.")
+        return
+    
+    # Slice the arrays
+    names_of_students = names[start_student_index : end_student_index + 1]
+    marks_of_students = marks[start_student_index : end_student_index + 1]
+
+    print("\n========== STUDENT RANGE ==========\n")
+
+    for i in range(marks_of_students.shape[0]):
+        print(f"Student : {names_of_students[i]}")
+        print(f"Marks   : {marks_of_students[i]}\n")
 
 if __name__ == "__main__":
     main()
