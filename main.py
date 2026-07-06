@@ -75,6 +75,7 @@ def main():
 
     show_students_range(names, marks, "jitesh".capitalize(), "Sakshi".capitalize())
 
+    show_subject_range(SUBJECTS, names, marks, "Physics".capitalize(), "English".capitalize())
 
 def display_student_data(
         roll_numbers: np.ndarray,
@@ -355,6 +356,72 @@ def show_students_range(
     for i in range(marks_of_students.shape[0]):
         print(f"Student : {names_of_students[i]}")
         print(f"Marks   : {marks_of_students[i]}\n")
+
+def show_subject_range(
+        subjects: np.ndarray, 
+        names: np.ndarray, 
+        marks: np.ndarray, 
+        start_subject_name: str, 
+        end_subject_name: str
+) -> None:
+    """
+    Display the marks of all students for a selected range of subjects.
+
+    Parameters:
+        subjects (numpy.ndarray):
+            A 1D NumPy array containing the subject names.
+
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+        start_subject_name (str):
+            The name of the first subject in the range.
+
+        end_subject_name (str):
+            The name of the last subject in the range.
+
+    Displays:
+        - The selected subject range
+        - Marks of every student for the selected subjects
+
+    If either subject does not exist in the dataset or the start subject
+    comes after the end subject, an appropriate error message is displayed.
+    """
+    
+    # Check whether the subject exists.
+    if start_subject_name not in subjects:
+        print("Start subject not found.")
+        return
+    
+    # Check whether the subject exists.
+    if end_subject_name not in subjects:
+        print("End subject not found.")
+        return
+    
+    # Find the indices
+    start_subject_index = np.where(subjects == start_subject_name)[0][0]
+    end_subject_index = np.where(subjects == end_subject_name)[0][0]
+
+    # Validate the order
+    if start_subject_index > end_subject_index:
+        print("The start subject must come before the end subject.")
+        return
+    
+    # Slice the arrays
+    selected_subjects = subjects[start_subject_index : end_subject_index + 1]
+
+    # Sliced marks array
+    marks_of_subjects = marks[:, start_subject_index:end_subject_index + 1]
+
+    print("\n========== SUBJECT RANGE ==========\n")
+
+    print(f"Subjects:\n{selected_subjects}\n")
+
+    for i in range(names.shape[0]):
+        print(f"{names[i] : <10} : {marks_of_subjects[i]}")
 
 if __name__ == "__main__":
     main()
