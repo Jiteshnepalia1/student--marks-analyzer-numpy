@@ -71,6 +71,8 @@ def main():
 
     show_subject_marks(SUBJECTS, names, marks, "chemistry".capitalize())
 
+    show_student_subject_mark(names, SUBJECTS, marks, "Sakshi".capitalize(), "chemistry".capitalize())
+
 
 def display_student_data(
         roll_numbers: np.ndarray,
@@ -236,6 +238,61 @@ def show_subject_marks(
 
     else:
         print("Invalid subject.")
+
+def show_student_subject_mark(
+        names: np.ndarray,
+        subjects: np.ndarray,
+        marks: np.ndarray,
+        name_of_student: str,
+        subject_name: str
+) -> None:
+    """
+    Display the marks obtained by a specific student in a specific subject.
+
+    Parameters:
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        subjects (numpy.ndarray):
+            A 1D NumPy array containing the subject names.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+        name_of_student (str):
+            The name of the student.
+
+        subject_name (str):
+            The name of the subject.
+
+    Displays:
+        - Student name
+        - Subject name
+        - Marks obtained in the selected subject
+
+    If the student or subject does not exist in the dataset, an error message is displayed.
+    """
+
+    # Check whether the student exists.
+    if name_of_student not in names:
+        print("Student not found.")
+        return
+    
+    if subject_name not in subjects:
+        print("Subject not found.")
+        return
+    
+    # Find the index of names and marks
+    student_index = np.where(names == name_of_student)[0][0]
+
+    # Find the column index of the selected subject.
+    subject_index = np.where(subjects == subject_name)[0][0]
+
+    print("\n========== STUDENT SUBJECT MARK ==========\n")
+    print(f"Student : {names[student_index]}")
+    print(f"Subject : {subjects[subject_index]}")
+    print(f"Marks   : {marks[student_index, subject_index]}")
+
 
 if __name__ == "__main__":
     main()
