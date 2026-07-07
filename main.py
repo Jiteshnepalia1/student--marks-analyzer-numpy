@@ -524,7 +524,6 @@ def show_student_subject_range(
     print(f"Subjects:\n{selected_subjects}\n")
 
     for i in range(names_of_students.shape[0]):
-        # print(f"{names_of_students[i] :<10} : {selected_marks[i, start_subject_index : end_subject_index + 1]}")
         print(f"{names_of_students[i] :<10} : {selected_marks[i]}")
 
 if __name__ == "__main__":
