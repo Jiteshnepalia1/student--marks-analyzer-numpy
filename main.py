@@ -77,6 +77,8 @@ def main():
 
     show_subject_range(SUBJECTS, names, marks, "Physics".capitalize(), "English".capitalize())
 
+    show_student_subject_range(names, SUBJECTS, marks, "Physics".capitalize(), "English".capitalize(), "jitesh".capitalize(), "sakshi".capitalize())
+
 def display_student_data(
         roll_numbers: np.ndarray,
         names: np.ndarray,
@@ -414,7 +416,7 @@ def show_subject_range(
     selected_subjects = subjects[start_subject_index : end_subject_index + 1]
 
     # Sliced marks array
-    marks_of_subjects = marks[:, start_subject_index:end_subject_index + 1]
+    marks_of_subjects = marks[:, start_subject_index : end_subject_index + 1]
 
     print("\n========== SUBJECT RANGE ==========\n")
 
@@ -422,6 +424,108 @@ def show_subject_range(
 
     for i in range(names.shape[0]):
         print(f"{names[i] : <10} : {marks_of_subjects[i]}")
+
+def show_student_subject_range(
+        names: np.ndarray,
+        subjects: np.ndarray,
+        marks: np.ndarray,
+        start_subject_name: str,
+        end_subject_name: str,
+        start_student_name: str,
+        end_student_name: str
+) -> None:
+    """
+    Display the marks of a selected range of students for a selected range of subjects.
+
+    Parameters:
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        subjects (numpy.ndarray):
+            A 1D NumPy array containing the subject names.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+        start_student_name (str):
+            The name of the first student in the range.
+
+        end_student_name (str):
+            The name of the last student in the range.
+
+        start_subject_name (str):
+            The name of the first subject in the range.
+
+        end_subject_name (str):
+            The name of the last subject in the range.
+
+    Displays:
+        - The selected subject range
+        - The selected student range
+        - Marks of the selected students in the selected subjects
+
+    If either student or subject does not exist in the dataset, or if
+    the start value comes after the end value, an appropriate error
+    message is displayed.
+    """
+    
+    # Check whether the subject exists.
+    if start_subject_name not in subjects:
+        print("Start subject not found.")
+        return
+    
+    # Check whether the subject exists.
+    if end_subject_name not in subjects:
+        print("End subject not found.")
+        return
+    
+    # Check whether the student exists.
+    if start_student_name not in names:
+        print("Start student not found.")
+        return
+    
+    # Check whether the student exists.
+    if end_student_name not in names:
+        print("End student not found.")
+        return
+    
+    # Find the indices
+    start_subject_index = np.where(subjects == start_subject_name)[0][0]
+    end_subject_index = np.where(subjects == end_subject_name)[0][0]
+
+    # Find the indices
+    start_student_index = np.where(names == start_student_name)[0][0]
+    end_student_index = np.where(names == end_student_name)[0][0]
+
+    # Validate the order
+    if start_subject_index > end_subject_index:
+        print("The start subject must come before the end subject.")
+        return
+    
+    # Validate the order
+    if start_student_index > end_student_index:
+        print("The start student must come before the end student.")
+        return
+    
+    # Slice the arrays
+    selected_subjects = subjects[start_subject_index : end_subject_index + 1]
+
+    # Slice the student names.
+    names_of_students = names[start_student_index : end_student_index + 1]
+
+    # Slice both rows (students) and columns (subjects).
+    selected_marks = marks[
+        start_student_index : end_student_index + 1,
+        start_subject_index : end_subject_index + 1
+    ]
+
+    print("\n========== STUDENT & SUBJECT RANGE ==========\n")
+
+    print(f"Subjects:\n{selected_subjects}\n")
+
+    for i in range(names_of_students.shape[0]):
+        # print(f"{names_of_students[i] :<10} : {selected_marks[i, start_subject_index : end_subject_index + 1]}")
+        print(f"{names_of_students[i] :<10} : {selected_marks[i]}")
 
 if __name__ == "__main__":
     main()
