@@ -79,6 +79,8 @@ def main():
 
     show_student_subject_range(names, SUBJECTS, marks, "Physics".capitalize(), "English".capitalize(), "jitesh".capitalize(), "sakshi".capitalize())
 
+    show_student_statistics(names, marks, "Jitesh".capitalize())
+
 def display_student_data(
         roll_numbers: np.ndarray,
         names: np.ndarray,
@@ -157,7 +159,7 @@ def display_dataset_info(marks: np.ndarray) -> None:
         - Total number of elements
     """
     # printing marks shape, dimension, datatype, size(number of items)
-    "\n========== DATASET INFORMATION ==========\n"
+    print("\n========== DATASET INFORMATION ==========\n")
 
     print(f"Shape of marks    : {marks.shape}")
     print(f"Dimension of marks: {marks.ndim}D")
@@ -526,6 +528,61 @@ def show_student_subject_range(
     for i in range(names_of_students.shape[0]):
         print(f"{names_of_students[i] :<10} : {selected_marks[i]}")
 
+def show_student_statistics(
+        names: np.ndarray,
+        marks: np.ndarray,
+        student_name: str
+) -> None:
+    """
+    Display statistical information for a specific student.
+
+    Parameters:
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+        student_name (str):
+            The name of the student whose statistics are to be displayed.
+
+    Displays:
+        - Student name
+        - Marks in all subjects
+        - Total marks
+        - Average marks
+        - Highest mark
+        - Lowest mark
+        - Median
+        - Standard deviation
+        - Variance
+
+    If the student does not exist in the dataset, an error message is displayed.
+    """
+    
+    # Check whether the student exists.
+    if student_name not in names:
+        print("Student not found")
+        return
+    
+    # Find the index of names and marks
+    student_index = np.where(names == student_name)[0][0]
+
+    # Marks of a student
+    student_marks = marks[student_index]
+
+    print("\n========== STUDENT STATISTICS ==========\n")
+
+    print(f"Student : {names[student_index]}\n")
+    print(f"Marks    : {student_marks}")
+
+    print(f"Total    : {np.sum(student_marks)}")
+    print(f"Average  : {np.mean(student_marks):.2f}")
+    print(f"Highest  : {np.max(student_marks)}")
+    print(f"Lowest   : {np.min(student_marks)}")
+    print(f"Median   : {np.median(student_marks)}")
+    print(f"Std Dev  : {np.std(student_marks):.2f}")
+    print(f"Variance : {np.var(student_marks):.2f}")
+
 if __name__ == "__main__":
     main()
-
