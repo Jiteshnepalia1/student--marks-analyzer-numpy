@@ -87,6 +87,8 @@ def main():
 
     show_student_ranking(names, marks)
 
+    show_topper_and_lowest_student(names, marks)
+
 def display_student_data(
         roll_numbers: np.ndarray,
         names: np.ndarray,
@@ -718,6 +720,50 @@ def show_student_ranking(
     for rank, index in enumerate(ranking, start=1):
         print(f"{rank:<2}. {names[index]:<10} : {student_totals[index]}")
 
+def show_topper_and_lowest_student(
+        names: np.ndarray,
+        marks: np.ndarray
+) -> None:
+    """
+    Display the topper and lowest-scoring student based on total marks.
+
+    Parameters:
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+    Displays:
+        - Topper's name
+        - Topper's total marks
+        - Lowest-scoring student's name
+        - Lowest-scoring student's total marks
+
+    Ranking is determined by calculating the total marks of each student
+    and selecting the highest and lowest totals using NumPy functions.
+    """
+    
+    # Calculate the total marks of each student.
+    student_totals = np.sum(marks, axis=1)
+
+    # Topper student marks indices.
+    topper_index = np.argmax(student_totals)
+
+    # Lowest student marks indices.
+    lowest_index = np.argmin(student_totals)
+
+    print("\n========== TOPPER & LOWEST STUDENT ==========\n")
+
+    print("Topper")
+    print("-------")
+    print(f"Name        : {names[topper_index]}")
+    print(f"Total Marks : {student_totals[topper_index]}\n")
+
+    print("Lowest")
+    print("------")
+    print(f"Name        : {names[lowest_index]}")
+    print(f"Total Marks : {student_totals[lowest_index]}")
 
 if __name__ == "__main__":
     main()
