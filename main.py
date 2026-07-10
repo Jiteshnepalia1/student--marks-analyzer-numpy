@@ -85,6 +85,8 @@ def main():
 
     show_class_statistics(marks)
 
+    show_student_ranking(names, marks)
+
 def display_student_data(
         roll_numbers: np.ndarray,
         names: np.ndarray,
@@ -680,6 +682,42 @@ def show_class_statistics(marks: np.ndarray) -> None:
     print(f"Median             : {np.median(marks):.2f}\n")
     print(f"Standard Deviation : {np.std(marks):.2f}\n")
     print(f"Variance           : {np.var(marks):.2f}")
+
+def show_student_ranking(
+        names: np.ndarray,
+        marks: np.ndarray
+) -> None:
+    """
+    Display the ranking of all students based on their total marks.
+
+    Parameters:
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+    Displays:
+        - Students ranked from highest to lowest total marks
+        - Rank number
+        - Student name
+        - Total marks
+
+    Ranking is determined by calculating the total marks of each student
+    and sorting them in descending order.
+    """
+    
+    # Calculate the total marks of each student.
+    student_totals = np.sum(marks, axis=1)
+
+    # Student indices sorted in descending order of total marks.
+    ranking = np.argsort(student_totals)[::-1]
+
+    print("\n========== STUDENT RANKING ==========\n")
+
+    for rank, index in enumerate(ranking, start=1):
+        print(f"{rank:<2}. {names[index]:<10} : {student_totals[index]}")
+
 
 if __name__ == "__main__":
     main()
