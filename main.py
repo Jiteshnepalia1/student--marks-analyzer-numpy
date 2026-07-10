@@ -81,6 +81,10 @@ def main():
 
     show_student_statistics(names, marks, "Jitesh".capitalize())
 
+    show_subject_statistics(SUBJECTS, marks, "maths".capitalize())
+
+    show_class_statistics(marks)
+
 def display_student_data(
         roll_numbers: np.ndarray,
         names: np.ndarray,
@@ -583,6 +587,99 @@ def show_student_statistics(
     print(f"Median   : {np.median(student_marks)}")
     print(f"Std Dev  : {np.std(student_marks):.2f}")
     print(f"Variance : {np.var(student_marks):.2f}")
+
+def show_subject_statistics(
+        subjects: np.ndarray,
+        marks: np.ndarray,
+        subject_name: str
+) -> None:
+    """
+    Display statistical information for a specific subject.
+
+    Parameters:
+        subjects (numpy.ndarray):
+            A 1D NumPy array containing the subject names.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+        subject_name (str):
+            The name of the subject whose statistics are to be displayed.
+
+    Displays:
+        - Subject name
+        - Marks of all students in the subject
+        - Total marks
+        - Average marks
+        - Highest mark
+        - Lowest mark
+        - Median
+        - Standard deviation
+        - Variance
+
+    If the subject does not exist in the dataset, an error message is displayed.
+    """
+    
+    # Check whether the subject exists.
+    if subject_name not in subjects:
+        print("Subject not found.")
+        return
+    
+    # Find the index of subject.
+    subject_index = np.where(subjects == subject_name)[0][0]
+
+    # Marks of subject.
+    subject_marks = marks[:, subject_index]
+
+    print("\n========== SUBJECT STATISTICS ==========\n")
+
+    print(f"Subject : {subjects[subject_index]}\n")
+    print(f"Marks      : {subject_marks}\n")
+
+    print(f"Total      : {np.sum(subject_marks)}")
+    print(f"Average    : {np.mean(subject_marks):.2f}")
+    print(f"Highest    : {np.max(subject_marks)}")
+    print(f"Lowest     : {np.min(subject_marks)}")
+    print(f"Median     : {np.median(subject_marks):.2f}")
+    print(f"Std Dev    : {np.std(subject_marks):.2f}")
+    print(f"Variance   : {np.var(subject_marks):.2f}")
+
+def show_class_statistics(marks: np.ndarray) -> None:
+    """
+    Display overall statistical information for the entire class.
+
+    Parameters:
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+    Displays:
+        - Total number of students
+        - Total number of subjects
+        - Overall average marks
+        - Highest mark
+        - Lowest mark
+        - Median
+        - Standard deviation
+        - Variance
+    """
+
+    # Finding total students.
+    total_students = marks.shape[0]
+
+    # Finding total subjects.
+    total_subjects = marks.shape[1]
+
+    print("\n========== CLASS STATISTICS ==========\n")
+
+    print(f"Total Students : {total_students}")
+    print(f"Total Subjects : {total_subjects}\n")
+
+    print(f"Overall Average    : {np.mean(marks):.2f}\n")
+    print(f"Highest Mark       : {np.max(marks)}\n")
+    print(f"Lowest Mark        : {np.min(marks)}\n")
+    print(f"Median             : {np.median(marks):.2f}\n")
+    print(f"Standard Deviation : {np.std(marks):.2f}\n")
+    print(f"Variance           : {np.var(marks):.2f}")
 
 if __name__ == "__main__":
     main()
