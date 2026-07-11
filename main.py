@@ -91,6 +91,8 @@ def main():
 
     show_subject_toppers(names, SUBJECTS, marks)
 
+    show_passed_students(names, marks)
+
 def display_student_data(
         roll_numbers: np.ndarray,
         names: np.ndarray,
@@ -793,7 +795,7 @@ def show_subject_toppers(
     The topper for each subject is determined using NumPy's
     argmax() function along axis=0.
     """
-    
+
     # Indices of max marks in subjects 
     topper_indices = np.argmax(marks, axis=0)
 
@@ -807,6 +809,44 @@ def show_subject_toppers(
         print("-" * len(subjects[index]))
         print(f"Rank 1 : {names[i]}")
         print(f"Marks  : {topper_marks[index]}\n")
+    
+def show_passed_students(
+        names: np.ndarray,
+        marks: np.ndarray
+) -> None:
+    """
+    Display the names of students who have passed in all subjects.
 
+    Parameters:
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+    Displays:
+        - Names of students who have passed every subject
+        - Total number of passed students
+
+    A student is considered passed only if they score at least
+    40 marks in every subject.
+    """
+    
+    # Passing marks = 40
+    PASS_MARKS = 40
+
+    # Students pass in subject
+    student_pass_subjects = marks >= PASS_MARKS
+
+    # Filter pass students
+    passed_students = np.all(student_pass_subjects, axis=1)
+
+    print("\n========== PASSED STUDENTS ==========\n")
+
+    for index in np.where(passed_students)[0]:
+        print(names[index])
+
+    print(f"\nTotal passed students : {np.sum(passed_students)}")
+    
 if __name__ == "__main__":
     main()
