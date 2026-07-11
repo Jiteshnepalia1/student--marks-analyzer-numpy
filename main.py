@@ -89,6 +89,8 @@ def main():
 
     show_topper_and_lowest_student(names, marks)
 
+    show_subject_toppers(names, SUBJECTS, marks)
+
 def display_student_data(
         roll_numbers: np.ndarray,
         names: np.ndarray,
@@ -764,6 +766,47 @@ def show_topper_and_lowest_student(
     print("------")
     print(f"Name        : {names[lowest_index]}")
     print(f"Total Marks : {student_totals[lowest_index]}")
+
+def show_subject_toppers(
+        names: np.ndarray,
+        subjects: np.ndarray,
+        marks : np.ndarray
+) -> None:
+    """
+    Display the topper of each subject.
+
+    Parameters:
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        subjects (numpy.ndarray):
+            A 1D NumPy array containing the subject names.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+    Displays:
+        - Subject name
+        - Top-ranked student in each subject
+        - Highest marks obtained in that subject
+
+    The topper for each subject is determined using NumPy's
+    argmax() function along axis=0.
+    """
+    
+    # Indices of max marks in subjects 
+    topper_indices = np.argmax(marks, axis=0)
+
+    # Maximum marks in subjects
+    topper_marks = np.max(marks, axis=0)
+
+    print("\n========== SUBJECT TOPPERS ==========\n")
+
+    for index, i in enumerate(topper_indices, start=0):
+        print(f"{subjects[index]}")
+        print("-" * len(subjects[index]))
+        print(f"Rank 1 : {names[i]}")
+        print(f"Marks  : {topper_marks[index]}\n")
 
 if __name__ == "__main__":
     main()
