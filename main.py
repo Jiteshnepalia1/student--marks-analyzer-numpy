@@ -95,6 +95,8 @@ def main():
 
     show_failed_students(names, marks)
 
+    show_students_above_average(names, marks)
+
 def display_student_data(
         roll_numbers: np.ndarray,
         names: np.ndarray,
@@ -871,7 +873,7 @@ def show_failed_students(
     A student is considered failed if they score less than
     40 marks in any subject.
     """
-    
+
     # Passing marks = 40
     PASS_MARKS = 40
 
@@ -887,6 +889,51 @@ def show_failed_students(
         print(names[index])
     
     print(f"\nTotal Failed Students : {np.sum(failed_students)}") 
+
+def show_students_above_average(
+        names: np.ndarray,
+        marks: np.ndarray
+) -> None:
+    """
+    Display the students whose total marks are above the class average.
+
+    Parameters:
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+    Displays:
+        - Class average total marks
+        - Names of students scoring above the class average
+        - Total marks of each selected student
+        - Total number of students above the class average
+
+    The class average is calculated using the total marks
+    obtained by each student.
+    """
+
+    # Total marks of each student.
+    students_total = marks.sum(axis=1)
+
+    # Average total marks of the class.
+    average_total = students_total.mean()
+
+    # checking above average students.
+    above_average_students = students_total > average_total
+
+    # Filter the above average students 
+    indices = np.where(above_average_students)[0]
     
+    print("\n========== STUDENTS ABOVE AVERAGE ==========\n")
+
+    print(f"Class Average Total : {average_total:.2f}\n")
+
+    for index in indices:
+        print(f"{names[index]:<10} : {students_total[index]}")
+    
+    print(f"Total Students : {indices.size}")
+
 if __name__ == "__main__":
     main()
