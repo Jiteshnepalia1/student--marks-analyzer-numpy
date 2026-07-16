@@ -93,6 +93,8 @@ def main():
 
     show_passed_students(names, marks)
 
+    show_failed_students(names, marks)
+
 def display_student_data(
         roll_numbers: np.ndarray,
         names: np.ndarray,
@@ -847,6 +849,44 @@ def show_passed_students(
         print(names[index])
 
     print(f"\nTotal passed students : {np.sum(passed_students)}")
+
+def show_failed_students(
+        names: np.ndarray,
+        marks: np.ndarray
+) -> None:
+    """
+     Display the names of students who have failed in one or more subjects.
+
+    Parameters:
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+    Displays:
+        - Names of students who have failed in at least one subject
+        - Total number of failed students
+
+    A student is considered failed if they score less than
+    40 marks in any subject.
+    """
+    
+    # Passing marks = 40
+    PASS_MARKS = 40
+
+    # Students failed in one or more subjects
+    student_fail_subjects = marks < PASS_MARKS
+
+    # Filter failed students
+    failed_students = np.any(student_fail_subjects, axis=1)
+
+    print("\n========== FAILED STUDENTS ==========\n")
+
+    for index in np.where(failed_students)[0]:
+        print(names[index])
+    
+    print(f"\nTotal Failed Students : {np.sum(failed_students)}") 
     
 if __name__ == "__main__":
     main()
