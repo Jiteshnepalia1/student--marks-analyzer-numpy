@@ -97,6 +97,8 @@ def main():
 
     show_students_above_average(names, marks)
 
+    show_students_below_average(names, marks)
+
 def display_student_data(
         roll_numbers: np.ndarray,
         names: np.ndarray,
@@ -923,10 +925,55 @@ def show_students_above_average(
     # checking above average students.
     above_average_students = students_total > average_total
 
-    # Filter the above average students 
+    # Filter the above average students. 
     indices = np.where(above_average_students)[0]
     
     print("\n========== STUDENTS ABOVE AVERAGE ==========\n")
+
+    print(f"Class Average Total : {average_total:.2f}\n")
+
+    for index in indices:
+        print(f"{names[index]:<10} : {students_total[index]}")
+    
+    print(f"Total Students : {indices.size}")
+
+def show_students_below_average(
+        names: np.ndarray,
+        marks: np.ndarray
+) -> None:
+    """
+    Display the students whose total marks are below the class average.
+
+    Parameters:
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+    Displays:
+        - Class average total marks
+        - Names of students whose total marks are below the class average
+        - Total marks of each listed student
+        - Total number of students below the class average
+
+    The class average is calculated using the total marks of all students.
+    Only students with total marks strictly below the class average are displayed.
+    """
+    
+    # Total marks of each student.
+    students_total = marks.sum(axis=1)
+
+    # Average total marks of the class.
+    average_total = students_total.mean()
+    
+    # checking below average students.
+    below_average_students = students_total < average_total
+
+    # Filter the below average students.
+    indices = np.where(below_average_students)[0]
+
+    print("\n========== STUDENTS BELOW AVERAGE ==========\n")
 
     print(f"Class Average Total : {average_total:.2f}\n")
 
