@@ -101,6 +101,8 @@ def main():
 
     show_students_with_full_marks(names, SUBJECTS, marks)
 
+    show_failed_subjects(names, SUBJECTS, marks)
+
 def display_student_data(
         roll_numbers: np.ndarray,
         names: np.ndarray,
@@ -1046,6 +1048,69 @@ def show_students_with_full_marks(
         print("No student scored full marks.")    
 
     print(f"Total Students : {total_students}")
+
+def show_failed_subjects(
+    names: np.ndarray,
+    subjects: np.ndarray,
+    marks: np.ndarray
+) -> None:
+    """
+    Display students who failed in one or more subjects.
+
+    Parameters:
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        subjects (numpy.ndarray):
+            A 1D NumPy array containing the subject names.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+    Displays:
+        - Student names who failed in any subject
+        - Subject names where they failed
+        - Marks obtained in failed subjects
+        - Total number of students who failed
+
+    A student is considered failed if their marks are below
+    the passing marks in at least one subject.
+    """
+    
+    # Passing_marks = 40
+    PASSING_MARKS = 40
+
+    # Counter for students who failed in at least one subject.
+    failed_students_count = 0
+
+    print("\n========== FAILED SUBJECTS ==========\n")
+
+    # Loop through every student
+    for i in range(names.shape[0]):
+
+        # Marks of the current student
+        student_marks = marks[i]
+
+        # Check whether the student failed in any subject. 
+        if np.any(student_marks < PASSING_MARKS):
+
+            failed_students_count += 1
+
+            print(f"{names[i]}")
+            print("-" * 15)
+
+            # Find the subjects student get failed
+            subject_indices = np.where(student_marks < PASSING_MARKS)[0]
+
+            for index in subject_indices:
+                print(f"{subjects[index]:<10} : {student_marks[index]}")
+            
+            print()
+    
+    if failed_students_count == 0:
+        print("No student failed in any subject.")
+
+    print(f"Total Failed Students : {failed_students_count}")
 
 if __name__ == "__main__":
     main()
