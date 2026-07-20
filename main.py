@@ -103,6 +103,8 @@ def main():
 
     show_failed_subjects(names, SUBJECTS, marks)
 
+    generate_student_report(names, roll_numbers, SUBJECTS, marks, "jitesh".capitalize())
+
 def display_student_data(
         roll_numbers: np.ndarray,
         names: np.ndarray,
@@ -1076,7 +1078,7 @@ def show_failed_subjects(
     A student is considered failed if their marks are below
     the passing marks in at least one subject.
     """
-    
+
     # Passing_marks = 40
     PASSING_MARKS = 40
 
@@ -1111,6 +1113,116 @@ def show_failed_subjects(
         print("No student failed in any subject.")
 
     print(f"Total Failed Students : {failed_students_count}")
+
+def generate_student_report(
+        names: np.ndarray,
+        roll_numbers: np.ndarray,
+        subjects: np.ndarray,
+        marks: np.ndarray,
+        student_name: str
+) -> None:
+    """
+    Generate a complete report card for a student.
+
+    Parameters:
+        names (numpy.ndarray):
+            Array containing student names.
+
+        roll_numbers (numpy.ndarray):
+            Array containing student roll numbers.
+
+        subjects (numpy.ndarray):
+            Array containing subject names.
+
+        marks (numpy.ndarray):
+            2D array containing student marks.
+
+        student_name (str):
+            Name of the student whose report is generated.
+
+    Displays:
+        - Student name
+        - Roll number
+        - Subject-wise marks
+        - Total marks
+        - Percentage
+        - Grade
+        - Rank
+        - Pass/Fail status
+    """
+    
+    PASS_MARKS = 40
+
+    # Checking student exist
+    if student_name not in names:
+        print("Student not found.")
+        return
+    
+    # Find student index
+    student_index = np.where(names == student_name)[0][0]
+
+    # Student marks
+    student_marks = marks[student_index]
+
+    # Calculate total and percentage
+    total_marks = np.sum(student_marks)
+
+    max_marks = subjects.size * 100
+
+    percentage = (total_marks / max_marks) * 100
+
+    # Grade calculation
+    if percentage >= 90:
+        grade = "A+"
+    elif percentage >= 80:
+        grade = "A"
+    elif percentage >= 70:
+        grade = "B"
+    elif percentage >= 60:
+        grade = "C"
+    elif percentage >= 40:
+        grade = "D"
+    else:
+        grade = "F"
+    
+    # Pass/Fail status
+    if np.all(student_marks >= PASS_MARKS):
+        status = "PASS"
+    else:
+        status = "FAIL"
+
+    # Calculate rank
+    student_total = np.sum(marks, axis=1)
+
+    total_marks = student_total[student_index]
+
+    rank = np.sum(student_total > total_marks) + 1
+
+    # Display report
+
+    print("\n========== STUDENT REPORT ==========")
+
+    print("-" * 40)
+
+    print(f"Name        : {names[student_index]}")
+    print(f"Roll No     : {roll_numbers[student_index]}")
+
+    print("-" * 40)
+
+    for index  in range(subjects.size):
+        print(
+            f"{subjects[index]:<12}: {student_marks[index]}"
+        )
+    
+    print("-" * 40)
+
+    print(f"Total       : {total_marks} / {max_marks}")
+    print(f"Percentage  : {percentage:.2f}%")
+    print(f"Grade       : {grade}")
+    print(f"Rank        : {rank}")
+    print(f"Status      : {status}")
+
+    print("-" * 40)
 
 if __name__ == "__main__":
     main()
