@@ -99,6 +99,8 @@ def main():
 
     show_students_below_average(names, marks)
 
+    show_students_with_full_marks(names, SUBJECTS, marks)
+
 def display_student_data(
         roll_numbers: np.ndarray,
         names: np.ndarray,
@@ -981,6 +983,69 @@ def show_students_below_average(
         print(f"{names[index]:<10} : {students_total[index]}")
     
     print(f"Total Students : {indices.size}")
+
+def show_students_with_full_marks(
+        names: np.ndarray,
+        subjects: np.ndarray,
+        marks: np.ndarray
+) -> None:
+    """
+    Display students who scored full marks in one or more subjects.
+
+    Parameters:
+        names (numpy.ndarray):
+            A 1D NumPy array containing the names of all students.
+
+        subjects (numpy.ndarray):
+            A 1D NumPy array containing the subject names.
+
+        marks (numpy.ndarray):
+            A 2D NumPy array containing the marks of all students.
+
+    Displays:
+        - Student names who achieved full marks
+        - Subjects in which they scored full marks
+        - Marks obtained in those subjects
+        - Total number of students with at least one full score
+
+    A student is considered a full-mark student if they score
+    100 marks in at least one subject.
+    """
+    
+    # Full marks = 100
+    FULL_MARKS = 100
+
+    # Counter for students with at least one full mark
+    total_students = 0
+
+    print("\n========== STUDENTS WITH FULL MARKS ==========\n")
+
+    # Loop through every student
+    for i in range(names.shape[0]):
+
+        # Marks of the current student
+        student_marks = marks[i]
+        
+        # Check whether the student has any full marks
+        if np.any(student_marks == FULL_MARKS):
+
+            total_students += 1
+
+            print(f"{names[i]}")
+            print("-" * 15)
+
+            # Find all subjects with full marks
+            subject_indices = np.where(student_marks == FULL_MARKS)[0]
+
+            for index in subject_indices:
+                print(f"{subjects[index]:<10} : {FULL_MARKS}") 
+        
+            print()
+
+    if total_students == 0:
+        print("No student scored full marks.")    
+
+    print(f"Total Students : {total_students}")
 
 if __name__ == "__main__":
     main()
