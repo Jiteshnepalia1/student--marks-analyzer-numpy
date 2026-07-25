@@ -20,13 +20,377 @@ SUBJECTS = np.array([
     "Computer"
 ])
 
+# ---------------- LOGIN CREDENTIALS ---------------- #
+
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "admin@123"
+
+MAX_LOGIN_ATTEMPTS = 3
+
+# ---------------- LOGIN SCREEN ---------------- #
+
+def show_login_screen() -> str:
+    """
+    Display the login screen and return the user's role choice.
+
+    Returns:
+        str: The user's choice ('1' for Student, '2' for Admin, '0' for Exit).
+    """
+
+    print("\n" + "=" * 50)
+    print("     STUDENT MARKS ANALYZER - LOGIN".center(42))
+    print("=" * 50)
+    print(" 1. Login as Student")
+    print(" 2. Login as Admin")
+    print(" 0. Exit")
+    print("=" * 50)
+
+    return input("\nEnter Your Choice: ").strip()
+
+def admin_login() -> bool:
+    """
+    Authenticate the admin using username and password.
+
+    Allows up to MAX_LOGIN_ATTEMPTS attempts before
+    returning to the login screen.
+
+    Returns:
+        bool: True if login is successful, False otherwise.
+    """
+
+    print("\n" + "=" * 50)
+    print("             ADMIN LOGIN")
+    print("=" * 50)
+
+    for attempt in range(1, MAX_LOGIN_ATTEMPTS + 1):
+
+        username = input("Enter Admin Username : ").strip()
+        password = input("Enter Admin Password : ").strip()
+
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            print("\nWelcome, Admin!")
+            return True
+
+        remaining = MAX_LOGIN_ATTEMPTS - attempt
+
+        if remaining > 0:
+            print(f"\nInvalid credentials. {remaining} attempt(s) remaining.\n")
+        else:
+            print("\nMaximum attempts reached. Returning to login screen.")
+
+    return False
+
+# ---------------- MENUS ---------------- #
+
+def show_admin_menu() -> None:
+    """Display the admin menu with full access to all features."""
+
+    print("\n" + "=" * 50)
+    print("      ADMIN - STUDENT MARKS ANALYZER")
+    print("=" * 50)
+
+    print(" 1. Display Student Data")
+    print(" 2. Display Dataset Information")
+    print(" 3. Explore Dataset")
+    print(" 4. Show Student Marks")
+    print(" 5. Show Subject Marks")
+    print(" 6. Show Student Subject Mark")
+    print(" 7. Show Students Range")
+    print(" 8. Show Subject Range")
+    print(" 9. Show Student Subject Range")
+    print("10. Show Student Statistics")
+    print("11. Show Subject Statistics")
+    print("12. Show Class Statistics")
+    print("13. Show Student Ranking")
+    print("14. Show Topper & Lowest Student")
+    print("15. Show Subject Toppers")
+    print("16. Show Passed Students")
+    print("17. Show Failed Students")
+    print("18. Show Students Above Average")
+    print("19. Show Students Below Average")
+    print("20. Show Students With Full Marks")
+    print("21. Show Failed Subjects")
+    print("22. Generate Student Report")
+    print(" 0. Logout")
+
+    print("=" * 50)
+
+def show_student_menu() -> None:
+    """Display the student menu with limited access to own data only."""
+
+    print("\n" + "=" * 50)
+    print("     STUDENT - MARKS ANALYZER")
+    print("=" * 50)
+
+    print(" 1. Show My Marks")
+    print(" 2. Show My Subject Mark")
+    print(" 3. Show My Statistics")
+    print(" 4. Show My Ranking")
+    print(" 5. Generate My Report")
+    print(" 0. Logout")
+
+    print("=" * 50)
+    
+# ---------------- AUTHENTICATION ---------------- #
+
+def student_login(
+        names: np.ndarray,
+        roll_numbers: np.ndarray
+) -> tuple[int, str, int] | None:
+    """
+    Authenticate a student using their name and roll number.
+
+    Allows up to MAX_LOGIN_ATTEMPTS attempts before
+    returning to the login screen.
+
+    Parameters:
+        names (numpy.ndarray):
+            Array containing student names.
+
+        roll_numbers (numpy.ndarray):
+            Array containing student roll numbers.
+
+    Returns:
+        tuple | None:
+            (student_index, student_name, student_roll_number)
+            on success, or None on failure.
+    """
+
+    print("\n" + "=" * 50)
+    print("             STUDENT LOGIN")
+    print("=" * 50)
+
+    for attempt in range(1, MAX_LOGIN_ATTEMPTS + 1):
+
+        username = input("Enter Student Name : ").strip().capitalize()
+
+        try:
+            password = int(input("Enter Roll Number  : "))
+        except ValueError:
+            print("\nRoll number must be a number.")
+            remaining = MAX_LOGIN_ATTEMPTS - attempt
+            if remaining > 0:
+                print(f"{remaining} attempt(s) remaining.\n")
+            else:
+                print("\nMaximum attempts reached. Returning to login screen.")
+            continue
+
+        # Check whether the student exists.
+        if username not in names:
+            remaining = MAX_LOGIN_ATTEMPTS - attempt
+            if remaining > 0:
+                print(f"\nInvalid Student Name. {remaining} attempt(s) remaining.\n")
+            else:
+                print("\nMaximum attempts reached. Returning to login screen.")
+            continue
+
+        # Find student index.
+        student_index = np.where(names == username)[0][0]
+
+        # Verify roll number.
+        if password != (roll_numbers[student_index]):
+            remaining = MAX_LOGIN_ATTEMPTS - attempt
+            if remaining > 0:
+                print(f"\nInvalid Roll Number. {remaining} attempt(s) remaining.\n")
+            else:
+                print("\nMaximum attempts reached. Returning to login screen.")
+            continue
+
+        print(f"\nWelcome, {username}!")
+
+        return (
+            student_index,
+            names[student_index],
+            roll_numbers[student_index]
+        )
+
+    return None
+
+# ---------------- SESSION HANDLERS ---------------- #
+
+def student_session(
+        names: np.ndarray,
+        roll_numbers: np.ndarray,
+        marks: np.ndarray,
+        logged_in_student: str,
+) -> None:
+    """
+    Handle the student session with limited menu access.
+
+    Students can only view their own data:
+    marks, subject marks, statistics, ranking, and report.
+
+    Parameters:
+        names (numpy.ndarray): Array of student names.
+        roll_numbers (numpy.ndarray): Array of roll numbers.
+        marks (numpy.ndarray): 2D array of marks.
+        student_index (int): Index of the logged-in student.
+        logged_in_student (str): Name of the logged-in student.
+        logged_in_roll (int): Roll number of the logged-in student.
+    """
+
+    while True:
+
+        show_student_menu()
+
+        choice = input("\nEnter Your Choice: ").strip()
+
+        if choice == "1":
+            show_student_marks(names, marks, logged_in_student)
+
+        elif choice == "2":
+            subject = input("Enter Subject Name: ").strip().capitalize()
+            show_student_subject_mark(
+                names, SUBJECTS, marks, logged_in_student, subject
+            )
+
+        elif choice == "3":
+            show_student_statistics(names, marks, logged_in_student)
+
+        elif choice == "4":
+            show_student_ranking(names, marks)
+
+        elif choice == "5":
+            generate_student_report(
+                names, roll_numbers, SUBJECTS, marks, logged_in_student
+            )
+
+        elif choice == "0":
+            print(f"\nGoodbye, {logged_in_student}!")
+            break
+
+        else:
+            print("\nInvalid Choice. Please try again.")
+
+        input("\nPress Enter to continue...")
+
+def admin_session(
+        names: np.ndarray,
+        roll_numbers: np.ndarray,
+        marks: np.ndarray
+) -> None:
+    """
+    Handle the admin session with full menu access.
+
+    Admin can access all features and view any student's data
+    by entering student/subject names interactively.
+
+    Parameters:
+        names (numpy.ndarray): Array of student names.
+        roll_numbers (numpy.ndarray): Array of roll numbers.
+        marks (numpy.ndarray): 2D array of marks.
+    """
+
+    while True:
+
+        show_admin_menu()
+
+        choice = input("\nEnter Your Choice: ").strip()
+
+        if choice == "1":
+            display_student_data(roll_numbers, names, marks)
+
+        elif choice == "2":
+            display_dataset_info(marks)
+
+        elif choice == "3":
+            explore_dataset(names, marks)
+
+        elif choice == "4":
+            student = input("Enter Student Name: ").strip().capitalize()
+            show_student_marks(names, marks, student)
+
+        elif choice == "5":
+            subject = input("Enter Subject Name: ").strip().capitalize()
+            show_subject_marks(SUBJECTS, names, marks, subject)
+
+        elif choice == "6":
+            student = input("Enter Student Name: ").strip().capitalize()
+            subject = input("Enter Subject Name: ").strip().capitalize()
+            show_student_subject_mark(names, SUBJECTS, marks, student, subject)
+
+        elif choice == "7":
+            start = input("Enter Start Student Name: ").strip().capitalize()
+            end = input("Enter End Student Name  : ").strip().capitalize()
+            show_students_range(names, marks, start, end)
+
+        elif choice == "8":
+            start = input("Enter Start Subject Name: ").strip().capitalize()
+            end = input("Enter End Subject Name  : ").strip().capitalize()
+            show_subject_range(SUBJECTS, names, marks, start, end)
+
+        elif choice == "9":
+            start_sub = input("Enter Start Subject Name: ").strip().capitalize()
+            end_sub = input("Enter End Subject Name  : ").strip().capitalize()
+            start_stu = input("Enter Start Student Name: ").strip().capitalize()
+            end_stu = input("Enter End Student Name  : ").strip().capitalize()
+            show_student_subject_range(
+                names, SUBJECTS, marks,
+                start_sub, end_sub, start_stu, end_stu
+            )
+
+        elif choice == "10":
+            student = input("Enter Student Name: ").strip().capitalize()
+            show_student_statistics(names, marks, student)
+
+        elif choice == "11":
+            subject = input("Enter Subject Name: ").strip().capitalize()
+            show_subject_statistics(SUBJECTS, marks, subject)
+
+        elif choice == "12":
+            show_class_statistics(marks)
+
+        elif choice == "13":
+            show_student_ranking(names, marks)
+
+        elif choice == "14":
+            show_topper_and_lowest_student(names, marks)
+
+        elif choice == "15":
+            show_subject_toppers(names, SUBJECTS, marks)
+
+        elif choice == "16":
+            show_passed_students(names, marks)
+
+        elif choice == "17":
+            show_failed_students(names, marks)
+
+        elif choice == "18":
+            show_students_above_average(names, marks)
+
+        elif choice == "19":
+            show_students_below_average(names, marks)
+
+        elif choice == "20":
+            show_students_with_full_marks(names, SUBJECTS, marks)
+
+        elif choice == "21":
+            show_failed_subjects(names, SUBJECTS, marks)
+
+        elif choice == "22":
+            student = input("Enter Student Name: ").strip().capitalize()
+            generate_student_report(
+                names, roll_numbers, SUBJECTS, marks, student
+            )
+
+        elif choice == "0":
+            print("\nAdmin logged out.")
+            break
+
+        else:
+            print("\nInvalid Choice. Please try again.")
+
+        input("\nPress Enter to continue...")
+
+# ---------------- MAIN ---------------- #
+
 def main():
     """
     Main entry point of the Student Marks Analyzer project.
 
-    Creates sample student data including roll numbers,
-    student names, and marks, then displays the dataset
-    and basic information about the marks array.
+    Displays a login screen where users can choose to login
+    as a Student (limited access) or Admin (full access).
+    After logout, returns to the login screen.
     """
 
     # Create an array of student roll numbers.
@@ -61,49 +425,38 @@ def main():
         [93, 90, 94, 92, 95]   # Riya
     ])
 
-    display_student_data(roll_numbers, names, marks)
+    # Outer loop: Login screen
+    while True:
 
-    display_dataset_info(marks)
+        role_choice = show_login_screen()
 
-    explore_dataset(names, marks)
+        # --- Student Login ---
+        if role_choice == "1":
 
-    show_student_marks(names, marks, "jitesh".capitalize())
+            result = student_login(names, roll_numbers)
 
-    show_subject_marks(SUBJECTS, names, marks, "chemistry".capitalize())
+            if result is None:
+                continue
 
-    show_student_subject_mark(names, SUBJECTS, marks, "Sakshi".capitalize(), "chemistry".capitalize())
+            student_index, logged_in_student, logged_in_roll = result
 
-    show_students_range(names, marks, "jitesh".capitalize(), "Sakshi".capitalize())
+            student_session(
+                names, roll_numbers, marks, logged_in_student
+            )
 
-    show_subject_range(SUBJECTS, names, marks, "Physics".capitalize(), "English".capitalize())
+        # --- Admin Login ---
+        elif role_choice == "2":
 
-    show_student_subject_range(names, SUBJECTS, marks, "Physics".capitalize(), "English".capitalize(), "jitesh".capitalize(), "sakshi".capitalize())
+            if admin_login():
+                admin_session(names, roll_numbers, marks)
 
-    show_student_statistics(names, marks, "Jitesh".capitalize())
+        # --- Exit ---
+        elif role_choice == "0":
+            print("\nThank you for using Student Marks Analyzer!")
+            break
 
-    show_subject_statistics(SUBJECTS, marks, "maths".capitalize())
-
-    show_class_statistics(marks)
-
-    show_student_ranking(names, marks)
-
-    show_topper_and_lowest_student(names, marks)
-
-    show_subject_toppers(names, SUBJECTS, marks)
-
-    show_passed_students(names, marks)
-
-    show_failed_students(names, marks)
-
-    show_students_above_average(names, marks)
-
-    show_students_below_average(names, marks)
-
-    show_students_with_full_marks(names, SUBJECTS, marks)
-
-    show_failed_subjects(names, SUBJECTS, marks)
-
-    generate_student_report(names, roll_numbers, SUBJECTS, marks, "jitesh".capitalize())
+        else:
+            print("\nInvalid Choice. Please try again.")
 
 def display_student_data(
         roll_numbers: np.ndarray,
